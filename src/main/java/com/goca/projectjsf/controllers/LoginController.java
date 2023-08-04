@@ -8,8 +8,11 @@ import java.io.IOException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
+import com.goca.projectjsf.dto.UsuarioDTO;
 
 /**
  * @author Angel
@@ -25,6 +28,14 @@ public class LoginController {
 	 * Contraseña ingresada en el login.
 	 */
 	private String password;
+	
+	/*
+	 * Bean que mantiene la informacion en sesion.
+	 */
+	@ManagedProperty("#{sessionController}")
+	private SessionController sessioncontroller;
+	
+	
 	/**
 	 * Metodo que permite ingresar a la pantalla principal del proyecto.
 	 */
@@ -34,6 +45,11 @@ public class LoginController {
 		if (usuario.equals("angel") && password.equals("12345")) {
 
 			try {
+				UsuarioDTO usuarioDTO = new UsuarioDTO();
+				usuarioDTO.setUsuario(this.usuario);
+				usuarioDTO.setPassword(this.password);
+				
+				this.sessioncontroller.setUsuarioDTO(usuarioDTO);
 				this.redireccionar("principal.xhtml");
 			} catch (IOException e) {
 				FacesContext.getCurrentInstance().addMessage("formLogin:txtUsuario", new FacesMessage(FacesMessage.SEVERITY_FATAL, "La página no existe", ""));
@@ -76,5 +92,19 @@ public class LoginController {
 	 */
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
+	}
+
+	/**
+	 * @return the sessioncontroller
+	 */
+	public SessionController getSessioncontroller() {
+		return sessioncontroller;
+	}
+
+	/**
+	 * @param sessioncontroller the sessioncontroller to set
+	 */
+	public void setSessioncontroller(SessionController sessioncontroller) {
+		this.sessioncontroller = sessioncontroller;
 	}
 }
